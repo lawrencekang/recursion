@@ -4,66 +4,42 @@
 // but you don't so you're going to write it from scratch:
 var stringifyJSON = function(obj) {
 	// your code goes here
-	// if obj contains properties, stringify the first key:value pair, delete the pair, then run stringifyJSON again
-	var results = "";
-	if (typeof obj == "number") {
-		return results += obj;
-	}
-
-	else if (obj === null) {
-		return "null";
-	}
-
-	else if (obj === true) {
-		return ('true');
-	}
-
-	else if (obj === false) {
-		return ('false');
+	var results = '';
+	if (typeof obj === "number" || typeof obj === "boolean" || obj === null) {
+		results += obj;
 	}
 
 	else if (typeof obj == "string") {
-		return results + ('"' + obj + '"');
+		results += ('"' + obj + '"');
 	}
 
 	else if (Array.isArray(obj)) {
-		console.log("this happened");
-		var arrResults = [];
-		var counter = 0;
-		var arrayCounter = 0;
-		var arrayRec = function(array) {
-			for (var i = counter; i<array.length; i++) {
-				if (typeof array[i] == "undefined") {
-					arrResults.push('[]');
-					counter ++
-				}
-				if (typeof array[i] == "number"){
-					console.log("NUMBER!");
-					arrResults.push(array[i]);
-					console.log(arrResults);
-					counter ++
-				}
-				else if (typeof array[i] == "string"){
-					console.log("STRING!")
-					arrResults.push('"' + array[i] + '"');
-					console.log(arrResults);
-					counter ++
-				}
-				else if (Array.isArray(array[i])) {
-					arrResults.push('[' + array[i] + ']');
-					console.log("[] was pushed");
-
-				}
-			
-			}
-
+	results += '[';
+	for (var i = 0; i<obj.length; i++) {
+		results += stringifyJSON(obj[i]); 
+		if (i < obj.length-1) {
+			results += ',';
 		}
-		arrayRec(obj);
-		console.log("loop finished");
-		return '[' + arrResults + ']';
-		}
-		
 	}
+	results += ']';
+	}
+
+	else if (!Array.isArray(obj)) {
+	counter = 0;
+	results += '{';
+	for (x in obj) {
+		if (typeof obj[x] !== "function" && typeof obj[x] !== "undefined") {	
+			if (counter > 0) {results += ","};
+			results += stringifyJSON(x) + ":" + stringifyJSON(obj[x]);
+			counter++
+		}
+	}
+	results += '}'
+	}
+return results
+}
+		
+
 
 
 
